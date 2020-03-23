@@ -72,17 +72,20 @@ function viewDepartments() {
                 return departmentArry;
             }
         })
-    }).then(function(choices){
-        console.log(choices)
-        let query = 
-        "SELECT EM.employee_id, EM.first_name, EM.last_name, RL.title, DP.department_name, RL.salary, EM.manager_id ";
-        query += 
-        "FROM Employee as EM INNER JOIN Role as RL ON EM.role_id = RL.role_id ";
-        query += 
-        "INNER JOIN Department as DP on RL.department_id = DP.department_id ";
-        query += "WHERE DP.department_name = ?";
-        connection.query(query, [choices.Department], function(err, res){
-            console.log(choices.Department)
-        })
-    })
+        .then(function(choices){
+            console.log(choices)
+            let query = 
+            "SELECT EM.employee_id, EM.first_name, EM.last_name, RL.title, DP.department_name, RL.salary, EM.manager_id ";
+            query += 
+            "FROM Employee as EM INNER JOIN Role as RL ON EM.role_id = RL.role_id ";
+            query += 
+            "INNER JOIN Department as DP on RL.department_id = DP.department_id ";
+            query += "WHERE DP.department_name = ?";
+            connection.query(query, [choices.Department], function(err, res){
+                console.log(choices.Department);
+                console.table(res);
+                start();
+            });
+        });
+    });
 }
