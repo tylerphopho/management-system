@@ -81,6 +81,8 @@ function viewDepartments() {
         query += 
         "INNER JOIN Department as DP on RL.department_id = DP.department_id ";
         query += "WHERE DP.department_name = ?";
-        connection.query(query, [choices.viewDep])
+        connection.query(query, [choices.Department], function(err, res){
+            console.log(choices.Department)
+        })
     })
 }
