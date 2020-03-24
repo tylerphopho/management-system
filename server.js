@@ -42,6 +42,26 @@ function start() {
             case "View All Employees by Manager":
             viewManagers();
             break;
+
+            case "Add Employee":
+            addEmployee();
+            break;
+
+            case "Remove Employee":
+            removeEmployee();
+            break;
+
+            case "Update Employee Role":
+            updateRole();
+            break;
+
+            case "Update Employee Manager":
+            updateManager();
+            break;
+
+            case "View All Roles":
+            viewRoles();
+            break;
         }
     });
 };
