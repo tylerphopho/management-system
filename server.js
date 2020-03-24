@@ -23,11 +23,13 @@ function start() {
             "View All Employees",
             "View All Employees by Department",
             "View All Employees by Manager",
+            "View ALl Managers",
+            "View All Departments",
+            "View All Roles",
             "Add Employee",
             "Remove Employee",
             "Update Employee Role",
             "Update Employee Manager",
-            "View All Roles"
         ]
     }).then(function(choice){
         switch(choice.initial){
@@ -36,11 +38,23 @@ function start() {
             break;
 
             case "View All Employees by Department":
-            viewEmployeeDepartments();
+            viewDepartments();
             break;
 
             case "View All Employees by Manager":
-            viewEmployeeManagers();
+            viewManagers();
+            break;
+
+            case "View All Managers":
+            allManagers();
+            break;
+
+            case "View All Departments":
+            allDepartments();
+            break;
+
+            case "View All Roles":
+            allRoles();
             break;
 
             case "Add Employee":
@@ -80,7 +94,7 @@ function viewEmployees() {
     });
 };
 
-function viewEmployeeDepartments() {
+function viewDepartments() {
     let query = "SELECT * FROM Department";
     connection.query(query, function(err, res){
         if (err) throw err;
@@ -116,7 +130,7 @@ function viewEmployeeDepartments() {
     });
 };
 
-function viewEmployeeManagers() {
+function viewManagers() {
     let query = "SELECT Manager.manager_id, Manager.manager_name FROM Manager";
     connection.query(query, function(err, res){
         if (err) throw err;
@@ -153,3 +167,21 @@ function viewEmployeeManagers() {
     });
 };
 
+function allManagers() {
+    let query = "SELECT Manager.manager_id, Manager.manager_name FROM Manager";
+    connection.query(query, function(err,res){
+        if(err) throw err;
+        console.table(res);
+        start();
+    });
+};
+
+
+function allDepartments() {
+    let query = "SELECT Deparment.department_id, Department.department_name FROM Department";
+    connection.query(query, function(err,res){
+        if(err) throw err;
+        console.table(res);
+        start();
+    });
+};
