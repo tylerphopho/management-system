@@ -8,14 +8,14 @@ USE management_system;
 CREATE TABLE department(
     department_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     department_name VARCHAR(30) NOT NULL   
-);
+)ENGINE=INNODB;
 
 CREATE TABLE role (
     role_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL(10,4) NOT NULL,
     department_id INT NOT NULL,
-);
+)ENGINE=INNODB;
 
 CREATE TABLE employee (
     employee_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -23,12 +23,12 @@ CREATE TABLE employee (
     last_name VARCHAR(30) NOT NULL,
     role_id INT NOT NULL,
     manager_id INT NOT NULL,
-);
+)ENGINE=INNODB;
 
 CREATE TABLE manager (
     manager_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     manager_name VARCHAR(30) NOT NULL,
-);
+)ENGINE=INNODB;
 
 -- Creates Departments
 INSERT INTO department(department_name) 
