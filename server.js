@@ -38,9 +38,13 @@ function start() {
             case "View All Employees by Department":
             viewDepartments();
             break;
+
+            case "View All Employees by Manager":
+            viewManagers();
+            break;
         }
-    })
-}
+    });
+};
 
 function viewEmployees() {
     let query = 
@@ -54,26 +58,28 @@ function viewEmployees() {
         console.table(res);
         start();
     });
-}
+};
 
 function viewDepartments() {
     let query = "SELECT * FROM Department";
     connection.query(query, function(err, res){
         if (err) throw err;
+        // Displays the departments options
         inquirer.prompt({
             name: "Department",
             type: "list",
-            message: "All Departments",
+            message: "Listing All Departments",
             choices: function() {
-                let departmentArry = [];
+                let departmentArray = [];
                 for (let i = 0; i < res.length; i++) {
-                    departmentArry.push(res[i].department_name);
+                    departmentArray.push(res[i].department_name);
                 }
-                return departmentArry;
+                return departmentArray;
             }
         })
         .then(function(choices){
             console.log(choices)
+            // With the option chosen; displays the choice.
             let query = 
             "SELECT EM.employee_id, EM.first_name, EM.last_name, RL.title, DP.department_name, RL.salary, EM.manager_id ";
             query += 
@@ -88,4 +94,41 @@ function viewDepartments() {
             });
         });
     });
-}
+};
+
+function viewManagers() {
+    let query = "SELECT Manager.manager_id, Manager.manager_name FROM Manager";
+    connection.query(query, function(err, res){
+        if (err) throw err;
+        inquirer.prompt({
+            name: "Manager",
+            type: "list",
+            message: "Listing All Managers",
+            choices: function() {
+                let managerArray = [];
+                for (let i = 0; i < res.length; i++) {
+                    managerArray.push(res[i].manager_name);
+                }
+                return managerArray;
+            }
+        })
+        .then(function(choices){
+            console.log(choices)
+            let query = 
+            "SELECT EM.employee_id, EM.first_name, EM.last_name, RL.title, DP.department_name, RL.salary ";
+            query +=
+            "FROM Employee as EM INNER JOIN Role as RL ON EM.role_id = RL.role_id ";
+            query +=
+            "INNER JOIN Department as DP on RL.department_id = DP.department_id ";
+            query +=
+            "INNER JOIN Manager as MG on MG.manager_id = EM.manager_id ";
+            query +=
+            "WHERE MG.manager_name = ?";
+            connection.query(query, [choices.Manager], function(err,res){
+                console.log(choices.Manager);
+                console.table(res);
+                start();
+            });
+        });
+    });
+};
