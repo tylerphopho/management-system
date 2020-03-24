@@ -36,11 +36,11 @@ function start() {
             break;
 
             case "View All Employees by Department":
-            viewDepartments();
+            viewEmployeeDepartments();
             break;
 
             case "View All Employees by Manager":
-            viewManagers();
+            viewEmployeeManagers();
             break;
 
             case "Add Employee":
@@ -80,7 +80,7 @@ function viewEmployees() {
     });
 };
 
-function viewDepartments() {
+function viewEmployeeDepartments() {
     let query = "SELECT * FROM Department";
     connection.query(query, function(err, res){
         if (err) throw err;
@@ -116,7 +116,7 @@ function viewDepartments() {
     });
 };
 
-function viewManagers() {
+function viewEmployeeManagers() {
     let query = "SELECT Manager.manager_id, Manager.manager_name FROM Manager";
     connection.query(query, function(err, res){
         if (err) throw err;
@@ -152,3 +152,4 @@ function viewManagers() {
         });
     });
 };
+
