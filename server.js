@@ -166,7 +166,7 @@ function viewManagers() {
         });
     });
 };
-
+// Function to view all managers.
 function allManagers() {
     let query = "SELECT Manager.manager_id, Manager.manager_name FROM Manager";
     connection.query(query, function(err,res){
@@ -176,12 +176,36 @@ function allManagers() {
     });
 };
 
-
+// Function to view all departments.
 function allDepartments() {
-    let query = "SELECT Deparment.department_id, Department.department_name FROM Department";
+    let query = "SELECT Department.department_id, Department.department_name FROM Department";
     connection.query(query, function(err,res){
         if(err) throw err;
         console.table(res);
         start();
     });
 };
+
+// Function to view all departments.
+function allRoles() {
+    let query = "SELECT Role.role_id, Role.title, Role.salary FROM Role";
+    connection.query(query, function(err,res){
+        if(err) throw err;
+        console.table(res);
+        start();
+    });
+};
+
+function addEmployee() {
+    let query = "SELECT * FROM Role ";
+    let mgQuery = "SELECT * FROM Manager ";
+    connection.query(query, function(err, res){
+        if (err) throw err;
+        connection.query(mgQuery, function(err, res){
+            if (mgErr) throw err;
+            inquirer.prompt([
+                
+            ])
+        })
+    })
+}
