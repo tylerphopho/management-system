@@ -256,3 +256,31 @@ function addEmployee() {
         });
     });
 };
+
+function removeEmployee() {
+    let query = "SELECT employee_id, first_name, last_name from Employee ";
+    connection.query(query, function(err, res){
+        if (err) throw err;
+        inquirer.prompt({
+            name: "employee",
+            type: "list",
+            message: "Which Employee do you wish to remove?",
+            choices: function() {
+                let employeeArray = []
+                for(let i = 0; i < res.length; i ++) {
+                    employeeArray.push(`${res[i].employee_id}: ${res[i].first_name} ${res[i].last_name}`);
+                }
+                return employeeArray;
+            }
+        })
+        .then(function(choice){
+            let choiceArray = (choice.employee.split(": "));
+            let deleteQuery = "DELETE FROM Employee WHERE employee.employee_id = ?";
+            connection.query(deleteQuery, [choiceArray[0]], function(err){
+                if (err) throw err;
+                console.log("Employee removed.");
+                start();
+            });
+        });
+    });
+};
