@@ -284,3 +284,100 @@ function removeEmployee() {
         });
     });
 };
+
+function updateRole() {
+    let employeeQuery = "SELECT * FROM Employee";
+    let roleQuery = "SELECT * FROM Role";
+    connection.query(employeeQuery, function(err, emRes){
+        if (err) throw err;
+        connection.query(roleQuery, function(err, rlRes){
+            if (err) throw err;
+            inquirer.prompt([
+                {
+                    name: "employee",
+                    type: "list",
+                    choices: function(){
+                        let employeeArray = []
+                        for(let i = 0; i < emRes.length; i++){
+                            employeeArray.push(`${emRes[i].employee_id}: ${emRes[i].first_name} ${emRes[i].last_name}`);
+                        }
+                        return employeeArray;
+                    }
+                },
+                {
+                    name: "role",
+                    type: "list",
+                    message: "Choose their new role",
+                    choices: function() {
+                        let roleArray = []
+                        for (let i = 0; i < rlRes.length; i++){
+                            roleArray.push(`${rlRes[i].role_id}: ${rlRes[i].title}`);
+                        }
+                        return roleArray;
+                    }
+                }
+            ])
+            .then(function(choice){
+                let employeeArray = (choice.employee.split(": "));
+                let roleArray = (choice.role.split(": "));
+                console.log(employeeArray);
+                console.log(roleArray);
+                let updateQuery = "UPDATE Employee SET Employee.role_id = ? WHERE Employee.employee_id = ? ";
+                connection.query(updateQuery, [roleArray[0],employeeArray[0]],
+                    function(err){
+                        if (err) throw err;
+                    }
+                );
+                start();
+            });
+        });
+    });
+};
+
+function updateManager() {
+    let employeeQuery = "SELECT * FROM Employee";
+    let managerQuery = "SELECT * FROM Manager";
+    connection.query(employeeQuery, function(err, emRes){
+        if (err) throw err;
+        connection.query(managerQuery, function(err, mgRes){
+            if (err) throw err;
+            inquirer.prompt([
+                {
+                    name: "employee",
+                    type: "list",
+                    choices: function(){
+                        let employeeArray = []
+                        for(let i = 0; i < emRes.length; i++){
+                            employeeArray.push(`${emRes[i].employee_id}: ${emRes[i].first_name} ${emRes[i].last_name}`);
+                        }
+                        return employeeArray;
+                    }
+                },
+                {
+                    name: "manager",
+                    type: "list",
+                    choices: function(){
+                        let managerArray = []
+                        for(let i = 0; i < mgRes.length; i++) {
+                            managerArray.push(`${mgRes[i].manager_id}: ${mgRes[i].manager_name}`);
+                        }
+                        return managerArray;
+                    }
+                },
+            ])
+            .then(function(choice){
+                let employeeArray = (choice.employee.split(": "));
+                let managerArray = (choice.manager.split(": "));
+                console.log(employeeArray)
+                console.log(managerArray);
+                let updateQuery = ("UPDATE Employee SET Employee.manager_id ? WHERE Employee.employee_id = ? ");
+                connection.query(updateQuery, employeeArray[0], managerArray[0],
+                function(err){
+                    if (err) throw err;
+                    }
+                )
+                start();
+            });
+        });
+    });
+};
