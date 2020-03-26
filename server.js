@@ -135,7 +135,7 @@ function viewManagers() {
     connection.query(query, function(err, res){
         if (err) throw err;
         inquirer.prompt({
-            name: "Manager",
+            name: "EMManager",
             type: "list",
             message: "Listing All Managers",
             choices: function() {
@@ -158,8 +158,8 @@ function viewManagers() {
             "INNER JOIN Manager as MG on MG.manager_id = EM.manager_id ";
             query +=
             "WHERE MG.manager_name = ?";
-            connection.query(query, [choices.Manager], function(err,res){
-                console.log(choices.Manager);
+            connection.query(query, [choices.EMManager], function(err,res){
+                console.log(choices.EMManager);
                 console.table(res);
                 start();
             });
@@ -201,11 +201,58 @@ function addEmployee() {
     let mgQuery = "SELECT * FROM Manager ";
     connection.query(query, function(err, res){
         if (err) throw err;
-        connection.query(mgQuery, function(err, res){
+        connection.query(mgQuery, function(mgErr, mgRes){
             if (mgErr) throw err;
             inquirer.prompt([
+                {
+                    name: "first_name",
+                    type: "input",
+                    message: "What is their first name?"
+                },
+                {
+                    name: "last_name",
+                    type: "input",
+                    message: "What is their last name?"
+                },
+                {
+                    name: "roles",
+                    type: "list",
+                    message: "What is their role?",
+                    choices: function() {
+                        let roleArray = []
+                        for(let i = 0; i < res.length; i++) {
+                            roleArray.push(`${res[i].role_id}: ${res[i].title}`)
+                        }
+                        return roleArray;
+                    }
+                },
+                {
+                    name: "manager",
+                    type: "list",
+                    message: "Who is their manager?",
+                    choices: function() {
+                        let managerArray = []
+                        for(let i = 0; i < mgRes.length; i++) {
+                            managerArray.push(`${mgRes[i].manager_id}: ${mgRes[i].manager_name}`)
+                        }
+                        return managerArray;
+                    }
+                }
                 
             ])
-        })
-    })
-}
+            .then(function({first_name, last_name, roles, manager}){
+                let roleArray = (roles.split(": "));
+                let managerArray = (manager.split(": "));
+                let query = "INSERT INTO Employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)"
+                connection.query(query,[first_name, last_name, roleArray[0], managerArray[0]], function(err){
+                    console.log(roles);
+                    if(err) throw err;
+                    console.log(first_name)
+                    console.log(manager);
+                    console.table(res);
+                    start();
+                });
+            });
+        });
+    });
+};
